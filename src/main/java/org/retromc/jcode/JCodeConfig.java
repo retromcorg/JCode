@@ -1,7 +1,6 @@
-package org.retromc.templateplugin;
+package org.retromc.jcode;
 
 import org.bukkit.util.config.Configuration;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -10,11 +9,11 @@ import java.io.File;
  * Extends the {@link Configuration} class to provide additional utility methods for
  * reading and writing configuration options with defaults.
  */
-public class TemplateConfig extends Configuration {
+public class JCodeConfig extends Configuration {
     private final int configVersion = 1;
 
 
-    private TemplatePlugin plugin;
+    private JCode plugin;
 
     /**
      * Constructs a new TemplateConfig instance.
@@ -22,7 +21,7 @@ public class TemplateConfig extends Configuration {
      * @param plugin     The plugin instance associated with this configuration.
      * @param configFile The configuration file to be managed.
      */
-    public TemplateConfig(TemplatePlugin plugin, File configFile) {
+    public JCodeConfig(JCode plugin, File configFile) {
         super(configFile);
         this.plugin = plugin;
         this.reload();
@@ -43,15 +42,9 @@ public class TemplateConfig extends Configuration {
         // Main options
         generateConfigOption("config-version", configVersion);
 
-        // Plugin options
-        generateConfigOption("settings.test-command.enabled.value", true);
-        generateConfigOption("settings.test-command.enabled.info", "Whether the test command is enabled."); // Informational comment
 
-        generateConfigOption("settings.test-command.response.value", "This is the response sent to players when they execute the test command.");
-        generateConfigOption("settings.test-command.response.info", "The response sent to players when they execute the test command."); // Informational comment
-
-        generateConfigOption("settings.welcome-message.value", "Welcome to the server, %player%!");
-        generateConfigOption("settings.welcome-message.info", "The message sent to players when join the server."); // Informational comment
+        generateConfigOption("settings.key.info", "This the key utilized by the plugin and other services to generate and authenticate codes generated");
+        generateConfigOption("settings.key.value", "default-key"); // Default key value, should be changed by the user
     }
 
     private void convertToNewConfig() {

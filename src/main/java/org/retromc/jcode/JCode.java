@@ -1,21 +1,21 @@
-package org.retromc.templateplugin;
+package org.retromc.jcode;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.retromc.templateplugin.commands.TemplateTestCommand;
+import org.retromc.jcode.commands.JCodeCommand;
 
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TemplatePlugin extends JavaPlugin {
+public class JCode extends JavaPlugin {
     private JavaPlugin plugin;
     private Logger log;
     private String pluginName;
     private PluginDescriptionFile pdf;
 
-    private TemplateConfig configuration;
+    private JCodeConfig configuration;
 
 
     @Override
@@ -27,14 +27,10 @@ public class TemplatePlugin extends JavaPlugin {
         log.info("[" + pluginName + "] Is Loading, Version: " + pdf.getVersion());
 
         // Load configuration
-        configuration = new TemplateConfig(this, new File(getDataFolder(), "config.yml")); // Load the configuration file from the plugin's data folder
+        configuration = new JCodeConfig(this, new File(getDataFolder(), "config.yml")); // Load the configuration file from the plugin's data folder
 
         // Register the commands
-        getCommand("testcommand").setExecutor(new TemplateTestCommand(this));
-
-        // Register the listeners
-        TemplateListener listener = new TemplateListener(this);
-        getServer().getPluginManager().registerEvents(listener, this);
+        getCommand("jcode").setExecutor(new JCodeCommand(this));
 
         log.info("[" + pluginName + "] Is Loaded, Version: " + pdf.getVersion());
     }
@@ -53,7 +49,7 @@ public class TemplatePlugin extends JavaPlugin {
         Bukkit.getLogger().log(level, "[" + plugin.getDescription().getName() + "] " + message);
     }
 
-    public TemplateConfig getConfig() {
+    public JCodeConfig getConfig() {
         return configuration;
     }
 }

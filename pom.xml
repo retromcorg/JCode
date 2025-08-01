@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>Poseidon-Plugin-Template</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <description>A template for creating plugins for the Poseidon server software.</description>
+    <groupId>com.retromc</groupId>
+    <artifactId>JCode</artifactId>
+    <version>1.0.0</version>
+    <description>A plugin that generates unique 5 minute codes for players to use for external services.</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

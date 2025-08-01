@@ -1,45 +1,66 @@
-# Poseidon-Plugin-Template
+# JCode
 
-This repository serves as a template to assist with creating plugins for Project Poseidon.
+**JCode** is a Bukkit plugin that generates short, secure, time-based authentication codes for players.  
+These codes can be used to authenticate players with external services such as cape or skin systems.
 
-It includes examples of:
-- A configuration file.
-- A listener.
-- A command.
+---
 
-## Steps to Use This Template
+## Features
+- Secure SHA-256 code generation
+- Codes change every **5 minutes**
+- Per-player & per-service codes
+- Configurable secret key
+- Permission-based access
 
-1. **Clone the Repository**
-    - Clone this repository to your local machine.
+---
 
-2. **Modify `pom.xml`**
-    - Update the following fields to reflect your plugin:
-        - `name`
-        - `version`
-        - `description`
-    - **Note:** Removing `-SNAPSHOT` from the version will trigger the `release.yml` GitHub Action to create a GitHub release.
+## Installation
+1. Place `JCode.jar` in your `plugins/` folder.
+2. Start the server to create `config.yml`.
+3. Edit `settings.key.value` with your own secure key.
+4. Restart or reload the server.
 
-3. **Refactor Package Structure**
-    - Refactor the package `org.retromc.templateplugin` to a unique package name for your plugin to avoid conflicts.
+---
 
-4. **Update `plugin.yml`**
-    - Update the `plugin.yml` file to match the refactored package name and plugin metadata.
+## Command
+`/jcode <service>` — Generates a code for the given service.  
+Requires `jcode.code` and `jcode.code.<service>` permissions.
 
-5. **Modify the Code**
-    - Customize the code as required for your plugin.
-    - **Important:**
-        - Remove the player greeting example in the listener.
-        - Remove the test command.
+---
 
-## GitHub Actions
+## How Codes Work
+1. Determine current **5-minute epoch block**:
+   ```
+   currentEpochMinutes / 5
+   ```
+2. Create hash from:
+   ```
+   player-uuid : config-key : epoch-block : service
+   ```
+3. Take the first **6 characters** as the code.
 
-This repository includes a pre-configured GitHub Action:
+---
 
-1. **`build-and-test.yml`**:
-    - Runs tests on every push to ensure code quality.
-    - Uploads an artifact for each commit, allowing others to download the plugin for testing.
+### 🖥 PHP Verification Example
+```php
+<?php
+function generateJCode($playerUuid, $configKey, $service) {
+    $epochMinutes = floor(microtime(true) / 60);
+    $block = floor($epochMinutes / 5);
+    $codeString = $playerUuid . ":" . $configKey . ":" . $block . ":" . strtolower($service);
+    $hash = hash("sha256", $codeString);
+    return substr($hash, 0, 6);
+}
 
-2. **`release.yml`**:
-    - Automatically creates a GitHub release if the `-SNAPSHOT` suffix is removed from the version in `pom.xml`.
+$uuid = "123e4567-e89b-12d3-a456-426614174000";
+$key = "your-secure-key";
+$service = "cape";
 
-With this template, you can kickstart your plugin development for Project Poseidon quickly and efficiently.
+echo "Generated code: " . generateJCode($uuid, $key, $service);
+?>
+```
+
+---
+
+## License
+Proprietary to **RetroMC**. Unauthorized distribution or modification prohibited.
