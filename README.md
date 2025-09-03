@@ -63,4 +63,4 @@ echo "Generated code: " . generateJCode($uuid, $key, $service);
 ---
 
 ## License
-Proprietary to **RetroMC**. Unauthorized distribution or modification prohibited.
+MIT License, software is provided as is. See LICENSE.md for more information.
