@@ -17,6 +17,8 @@ public class JCode extends JavaPlugin {
 
     private JCodeConfig configuration;
 
+    private Generator generator;
+
 
     @Override
     public void onEnable() {
@@ -28,6 +30,10 @@ public class JCode extends JavaPlugin {
 
         // Load configuration
         configuration = new JCodeConfig(this, new File(getDataFolder(), "config.yml")); // Load the configuration file from the plugin's data folder
+
+        String secretKey = configuration.getConfigString("settings.key.value");
+
+        this.generator = new Generator(secretKey);
 
         // Register the commands
         getCommand("jcode").setExecutor(new JCodeCommand(this));
@@ -47,6 +53,10 @@ public class JCode extends JavaPlugin {
 
     public void logger(Level level, String message) {
         Bukkit.getLogger().log(level, "[" + plugin.getDescription().getName() + "] " + message);
+    }
+
+    public Generator getGenerator() {
+        return generator;
     }
 
     public JCodeConfig getConfig() {
