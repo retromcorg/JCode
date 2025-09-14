@@ -6,7 +6,7 @@
 
     <groupId>com.retromc</groupId>
     <artifactId>JCode</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <description>A plugin that generates unique 5 minute codes for players to use for external services.</description>
 
     <properties>
