@@ -26,20 +26,6 @@ public class JCodeCommand implements CommandExecutor {
         this.config = plugin.getConfig();
     }
 
-    public String getUTC5MinuteEpochBlock() {
-        long epochMinutes = System.currentTimeMillis() / 60000; // ms → minutes
-        long block = epochMinutes / 5; // group into 5-minute chunks
-        return String.valueOf(block);
-    }
-
-    public String generateSHA256(String message) throws NoSuchAlgorithmException {
-        MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-        sha256.reset();
-        sha256.update(message.getBytes());
-        byte[] digest = sha256.digest();
-        return String.format("%0" + (digest.length << 1) + "x", new Object[] { new BigInteger(1, digest) });
-    }
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // Check if the sender is a player
@@ -55,29 +41,23 @@ public class JCodeCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if(args.length == 0) {
+        if (args.length == 0) {
             // If no arguments are provided, show the help message
-            player.sendMessage(ChatColor.YELLOW + "Please specify a service. eg. /jcode capes");
+            player.sendMessage(ChatColor.YELLOW + "Please specify a service. eg. /jcode cape");
             return true;
         }
 
         String service = args[0].toLowerCase();
 
-        if(!sender.hasPermission("jcode.code." + service) && !sender.isOp()) {
+        if (!sender.hasPermission("jcode.code." + service) && !sender.isOp()) {
             player.sendMessage(ChatColor.RED + "You do not have permission to use this service.");
             return true;
         }
 
-        try {
-            String codeString = player.getUniqueId().toString() + ":" + config.getConfigString("settings.key.value") + ":" + getUTC5MinuteEpochBlock() + ":" + service;
-            String code = generateSHA256(codeString).substring(0, 6);
+        String code = this.plugin.getGenerator().generateCode(player.getUniqueId(), service);
 
-            player.sendMessage(ChatColor.GREEN + "Your code for the service '" + service + "' is: " + ChatColor.GOLD + code);
-            player.sendMessage(ChatColor.YELLOW + "This code is valid for 5 minutes and can be used to access the service.");
-        } catch (NoSuchAlgorithmException e) {
-            player.sendMessage(ChatColor.RED + "An error occurred while generating your code. Please try again later.");
-            throw new RuntimeException(e);
-        }
+        player.sendMessage(ChatColor.GREEN + "Your code for the service '" + service + "' is: " + ChatColor.GOLD + code);
+        player.sendMessage(ChatColor.YELLOW + "This code is valid for 5 minutes and can be used to access the service.");
 
         return true;
     }
